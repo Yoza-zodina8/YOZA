@@ -14,7 +14,7 @@
 }
 
 body {
-  background: #c9b27c;
+  background: #000;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -26,10 +26,34 @@ body {
   width: 95%;
   max-width: 1200px;
   height: 500px;
-  background: #bfa66d;
   border-radius: 24px;
   overflow: hidden;
   padding: 30px;
+
+  /* CINEMATIC BACKGROUND (UPDATED) */
+  background:
+    linear-gradient(
+      to right,
+      rgba(0,0,0,0.9) 0%,
+      rgba(0,0,0,0.5) 35%,
+      rgba(0,0,0,0.5) 65%,
+      rgba(0,0,0,0.9) 100%
+    ),
+    url("images/spiderman-bg.jpg") center / cover no-repeat;
+}
+
+/* Extra cinematic vignette */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    rgba(0,0,0,0.75) 75%
+  );
+  z-index: 2;
+  pointer-events: none;
 }
 
 /* Background text */
@@ -41,7 +65,7 @@ body {
   align-items: center;
   font-size: clamp(60px, 15vw, 180px);
   font-weight: 900;
-  color: rgba(255,255,255,0.45);
+  color: rgba(255,255,255,0.08);
   letter-spacing: 8px;
   z-index: 1;
 }
@@ -53,8 +77,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
-  transition: top 0.3s ease;
+  z-index: 3;
 }
 
 /* Fade */
@@ -64,13 +87,13 @@ body {
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(191,166,109,0.6) 0%,
+    rgba(0,0,0,0.8) 0%,
     transparent 20%,
     transparent 80%,
-    rgba(191,166,109,0.6) 100%
+    rgba(0,0,0,0.8) 100%
   );
   pointer-events: none;
-  z-index: 3;
+  z-index: 4;
 }
 
 /* Slider */
@@ -110,7 +133,7 @@ body {
   width: 260px;
   height: auto;
   transition: transform 0.4s ease;
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+  filter: drop-shadow(0 25px 40px rgba(0,0,0,0.7));
   pointer-events: none;
   user-drag: none;
   -webkit-user-drag: none;
@@ -127,40 +150,32 @@ body {
   position: absolute;
   left: 30px;
   bottom: 40px;
-  z-index: 4;
+  z-index: 5;
   max-width: 300px;
+  color: #fff;
 }
 
 .content h3 {
   font-size: 14px;
   letter-spacing: 1px;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .content p {
   font-size: 13px;
   margin-top: 8px;
   line-height: 1.5;
+  opacity: 0.8;
 }
 
-/* CTA */
-.cta {
-  position: absolute;
-  right: 30px;
-  bottom: 40px;
-  font-weight: 600;
-  cursor: pointer;
-  z-index: 4;
-}
-
-/* Mobile adjustments */
+/* Mobile */
 @media (max-width: 768px) {
   .hero {
-    height: 550px; /* Slightly taller for spacing */
+    height: 550px;
   }
 
   .character-slider-wrapper {
-    top: 35%; /* lower slider so content on top-left is visible */
+    top: 35%;
   }
 
   .character-slider {
@@ -171,14 +186,12 @@ body {
   .character img,
   .character.spacer {
     width: 180px;
-    height: auto;
   }
 
   .character.spacer {
     width: 90px;
   }
 
-  /* Move content to top-left on mobile */
   .content {
     top: 20px;
     left: 20px;
@@ -202,10 +215,11 @@ body {
       <div class="character spacer"></div>
 
       <div class="character" data-link="kiro.html"><img src="images/kiro.png"></div>
-      <div class="character" data-link="profile3.html"><img src="images/kiro.png"></div>
-      <div class="character" data-link="profile4.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile3.html"><img src="images/zustx.png"></div>
+      <div class="character" data-link="profile4.html"><img src="images/yoursunseen.png"></div>
       <div class="character" data-link="profile5.html"><img src="images/kiro.png"></div>
-      <div class="character" data-link="profile6.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile6.html"><img src="images/yoursunseen.png"></div>
+      <div class="character" data-link="profile3.html"><img src="images/zustx.png"></div>
 
       <div class="character spacer"></div>
       <div class="character spacer"></div>
@@ -218,8 +232,6 @@ body {
     <h3>BANANA Fish</h3>
     <p>Step into the arena, show your strength, and let the world remember your name</p>
   </div>
-
-  <div class="cta" onclick="goNext('explore.html')">EXPLORE ALL →</div>
 </div>
 
 <script>
@@ -329,7 +341,6 @@ slider.addEventListener('touchmove', e => {
   e.preventDefault();
 }, { passive: false });
 
-/* Initialize slider to first character */
 function initSlider() {
   const first = realCharacters[0];
   const sliderCenter = slider.getBoundingClientRect().left + slider.offsetWidth / 2;
