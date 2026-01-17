@@ -56,7 +56,7 @@ body {
   z-index: 2;
 }
 
-/* Soft visual fade (does NOT clip characters) */
+/* Fade */
 .character-slider-wrapper::before {
   content: "";
   position: absolute;
@@ -76,12 +76,13 @@ body {
 .character-slider {
   display: flex;
   gap: 60px;
-  width: 1000px; /* ✅ increased so side characters fully fit */
+  width: 1000px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   padding: 40px;
   cursor: grab;
   user-select: none;
+  touch-action: pan-x; /* ✅ LOCK TO HORIZONTAL */
 }
 
 .character-slider:active {
@@ -97,7 +98,6 @@ body {
   flex: 0 0 auto;
   scroll-snap-align: center;
   pointer-events: none;
-  transition: transform 0.4s ease;
 }
 
 .character.active {
@@ -177,25 +177,11 @@ body {
 
       <div class="character spacer"></div>
 
-      <div class="character" data-link="profile2.html">
-        <img src="images/kiro.png">
-      </div>
-
-      <div class="character" data-link="profile3.html">
-        <img src="images/kiro.png">
-      </div>
-
-      <div class="character" data-link="profile4.html">
-        <img src="images/kiro.png">
-      </div>
-
-      <div class="character" data-link="profile5.html">
-        <img src="images/kiro.png">
-      </div>
-
-      <div class="character" data-link="profile6.html">
-        <img src="images/kiro.png">
-      </div>
+      <div class="character" data-link="profile2.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile3.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile4.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile5.html"><img src="images/kiro.png"></div>
+      <div class="character" data-link="profile6.html"><img src="images/kiro.png"></div>
 
       <div class="character spacer"></div>
 
@@ -283,6 +269,7 @@ slider.addEventListener("scroll", () => {
   scrollTimeout = setTimeout(snapToNearestRealCharacter, 120);
 });
 
+/* Mouse */
 let isDown = false;
 let startX;
 let scrollLeft;
@@ -300,6 +287,20 @@ slider.addEventListener('mousemove', e => {
   e.preventDefault();
   slider.scrollLeft = scrollLeft - (e.pageX - startX) * 1.5;
 });
+
+/* Touch (MOBILE FIX) */
+let touchStartX = 0;
+
+slider.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].pageX;
+  scrollLeft = slider.scrollLeft;
+}, { passive: true });
+
+slider.addEventListener('touchmove', e => {
+  const x = e.touches[0].pageX;
+  slider.scrollLeft = scrollLeft - (x - touchStartX) * 1.5;
+  e.preventDefault();
+}, { passive: false });
 
 window.addEventListener("load", () => {
   const first = realCharacters[0];
