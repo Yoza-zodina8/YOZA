@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Model Hero</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background: #c9b27c;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.hero {
+  position: relative;
+  width: 95%;
+  max-width: 1200px;
+  height: 500px;
+  background: #bfa66d;
+  border-radius: 24px;
+  overflow: hidden;
+  padding: 30px;
+}
+
+/* Background text */
+.hero h1 {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: clamp(80px, 20vw, 180px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 8px;
+  z-index: 1;
+}
+
+/* Slider wrapper */
+.character-slider-wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+/* Soft visual fade (does NOT clip characters) */
+.character-slider-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(191,166,109,0.6) 0%,
+    transparent 20%,
+    transparent 80%,
+    rgba(191,166,109,0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Slider */
+.character-slider {
+  display: flex;
+  gap: 60px;
+  width: 1000px; /* ✅ increased so side characters fully fit */
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 40px;
+  cursor: grab;
+  user-select: none;
+}
+
+.character-slider:active {
+  cursor: grabbing;
+}
+
+.character-slider::-webkit-scrollbar {
+  display: none;
+}
+
+/* Characters */
+.character {
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  pointer-events: none;
+  transition: transform 0.4s ease;
+}
+
+.character.active {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.character img {
+  width: 260px;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+  pointer-events: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+/* Spacer */
+.character.spacer {
+  width: 260px;
+  height: 360px;
+}
+
+/* Content */
+.content {
+  position: absolute;
+  left: 30px;
+  bottom: 40px;
+  z-index: 4;
+  max-width: 300px;
+}
+
+.content h3 {
+  font-size: 14px;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.content p {
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* CTA */
+.cta {
+  position: absolute;
+  right: 30px;
+  bottom: 40px;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 4;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .character-slider {
+    width: 100%;
+    gap: 30px;
+  }
+
+  .character img,
+  .character.spacer {
+    width: 200px;
+    height: 280px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <h1>BANANA FISH</h1>
+
+  <div class="character-slider-wrapper">
+    <div class="character-slider">
+
+      <div class="character spacer"></div>
+
+      <div class="character" data-link="profile2.html">
+        <img src="images/kiro.png">
+      </div>
+
+      <div class="character" data-link="profile3.html">
+        <img src="images/kiro.png">
+      </div>
+
+      <div class="character" data-link="profile4.html">
+        <img src="images/kiro.png">
+      </div>
+
+      <div class="character" data-link="profile5.html">
+        <img src="images/kiro.png">
+      </div>
+
+      <div class="character" data-link="profile6.html">
+        <img src="images/kiro.png">
+      </div>
+
+      <div class="character spacer"></div>
+
+    </div>
+  </div>
+
+  <div class="content">
+    <h3>BANANA Fish Player</h3>
+    <p>Kan main team leh substitute te, hriat belh i duh chuan picture hmet rawh</p>
+  </div>
+
+  <div class="cta" onclick="goNext('explore.html')">EXPLORE ALL →</div>
+</div>
+
+<script>
+function goNext(page) {
+  window.location.href = page;
+}
+
+const slider = document.querySelector('.character-slider');
+const realCharacters = [...document.querySelectorAll('.character:not(.spacer)')];
+let scrollTimeout;
+
+function updateCharacters() {
+  const sliderCenter = slider.getBoundingClientRect().left + slider.offsetWidth / 2;
+  let closest = null;
+  let minDistance = Infinity;
+
+  realCharacters.forEach(char => {
+    const img = char.querySelector('img');
+    const rect = img.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const distance = Math.abs(sliderCenter - center);
+
+    img.style.transform = `scale(${Math.max(0.95, 1.35 - distance / 300)})`;
+    char.classList.remove('active');
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = char;
+    }
+  });
+
+  if (closest) closest.classList.add('active');
+}
+
+function snapToNearestRealCharacter() {
+  const sliderCenter = slider.getBoundingClientRect().left + slider.offsetWidth / 2;
+  let closest = null;
+  let minDistance = Infinity;
+
+  realCharacters.forEach(char => {
+    const rect = char.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
+    const distance = Math.abs(sliderCenter - center);
+
+    if (distance < minDistance) {
+      minDistance = distance;
+      closest = char;
+    }
+  });
+
+  if (closest) {
+    const rect = closest.getBoundingClientRect();
+    slider.scrollBy({
+      left: rect.left + rect.width / 2 - sliderCenter,
+      behavior: "smooth"
+    });
+  }
+}
+
+realCharacters.forEach(char => {
+  char.addEventListener('click', () => {
+    if (char.classList.contains('active')) {
+      goNext(char.dataset.link);
+    } else {
+      snapToNearestRealCharacter();
+    }
+  });
+});
+
+slider.addEventListener("scroll", () => {
+  updateCharacters();
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(snapToNearestRealCharacter, 120);
+});
+
+let isDown = false;
+let startX;
+let scrollLeft;
+
+slider.addEventListener('mousedown', e => {
+  isDown = true;
+  startX = e.pageX;
+  scrollLeft = slider.scrollLeft;
+});
+
+window.addEventListener('mouseup', () => isDown = false);
+
+slider.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  slider.scrollLeft = scrollLeft - (e.pageX - startX) * 1.5;
+});
+
+window.addEventListener("load", () => {
+  const first = realCharacters[0];
+  const sliderCenter = slider.getBoundingClientRect().left + slider.offsetWidth / 2;
+  const rect = first.getBoundingClientRect();
+
+  slider.scrollBy({
+    left: rect.left + rect.width / 2 - sliderCenter,
+    behavior: "instant"
+  });
+
+  updateCharacters();
+});
+
+window.addEventListener("resize", updateCharacters);
+</script>
+
+</body>
+</html>
