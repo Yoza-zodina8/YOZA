@@ -25,7 +25,7 @@ body{
     top:0;
     left:0;
     width:100%;
-    padding:25px 60px;
+    padding:20px 24px;
     display:flex;
     justify-content:space-between;
     align-items:center;
@@ -43,7 +43,7 @@ body{
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
-    padding:140px 60px 60px;
+    padding:120px 60px 60px;
     background:linear-gradient(
         to right,
         rgba(0,0,0,.95),
@@ -80,26 +80,27 @@ body{
 
 /* 🔥 MEDIA IMAGE SECTION */
 .media-section{
-    margin-top:100px;
+    margin-top:80px;
     display:flex;
-    gap:140px;
+    gap:80px;
 }
 
 .media-card{
-    width:150px;
+    width:220px;
     text-align:center;
 }
 
 .media-card img{
-    width:300%;
-    height:600px;
+    width:100%;
+    height:340px;
     object-fit:cover;
+    border-radius:16px;
     transition:.3s;
 }
 
 .media-text{
-    margin-top:10px;
-    font-size:13px;
+    margin-top:12px;
+    font-size:14px;
     opacity:.85;
 }
 
@@ -134,27 +135,21 @@ body{
     );
 }
 
-/* RESPONSIVE */
-@media (max-width:900px){
+/* ========================= */
+/* 📱 MOBILE RESPONSIVE */
+/* ========================= */
+@media (max-width: 900px){
+
     .hero{
         flex-direction:column;
-        text-align:center;
         align-items:center;
+        text-align:center;
+        padding:100px 20px 40px;
     }
 
     .content{
         margin-top:0;
-    }
-
-    .media-section{
-        justify-content:center;
-        flex-wrap:wrap;
-    }
-
-    .hero-image{
-        margin-top:40px;
-        justify-content:center;
-        align-items:center;
+        max-width:100%;
     }
 
     .title{
@@ -162,7 +157,37 @@ body{
     }
 
     .subtitle{
-        font-size:24px;
+        font-size:22px;
+    }
+
+    .description{
+        font-size:14px;
+    }
+
+    .media-section{
+        margin-top:50px;
+        flex-direction:column;   /* 🔥 STACK IMAGES */
+        gap:40px;
+        align-items:center;
+    }
+
+    .media-card{
+        width:90%;               /* 🔥 FIT MOBILE */
+        max-width:320px;
+    }
+
+    .media-card img{
+        height:220px;
+    }
+
+    .hero-image{
+        margin-top:50px;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .hero-image img{
+        max-height:60vh;
     }
 }
 </style>
