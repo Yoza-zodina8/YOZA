@@ -177,7 +177,10 @@ body{
     }
 
     .media-card img{
-        height:220px;
+        height:auto;               /* 🔥 allow full image */
+        max-height:420px;          /* control size, not crop */
+        object-fit:contain;        /* 🔥 NO CROPPING */
+        background:#000;           /* optional: clean edges */
     }
 
     .hero-image{
